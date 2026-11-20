@@ -1,0 +1,376 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Privacy Settings</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+  /* Two views in one file: #consent (cookie-consent sheet) and #policy (full cookie policy page) */
+  :root {
+    --bg: #e9ebf2;
+    --sheet: #ffffff;
+    --surface: #ffffff;
+    --ink: #1a1c25;
+    --muted: #6b7180;
+    --line: #e6e8ef;
+    --blue: #2f6bff;
+    --blue-2: #5a86ff;
+    --dark: #16181f;
+    --radius: 22px;
+    --shadow: 0 24px 60px rgba(20, 22, 33, 0.22);
+    --shadow-sm: 0 8px 24px rgba(20, 22, 33, 0.08);
+    --font: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0c0e14; --sheet: #171a22; --surface: #171a22;
+      --ink: #eef0f6; --muted: #9aa1b4; --line: #262a36; --dark: #0a0c11;
+      --shadow: 0 24px 60px rgba(0,0,0,0.6); --shadow-sm: 0 8px 24px rgba(0,0,0,0.4);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0c0e14; --sheet: #171a22; --surface: #171a22;
+    --ink: #eef0f6; --muted: #9aa1b4; --line: #262a36; --dark: #0a0c11;
+    --shadow: 0 24px 60px rgba(0,0,0,0.6); --shadow-sm: 0 8px 24px rgba(0,0,0,0.4);
+    color-scheme: dark;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--font);
+    background:
+      radial-gradient(700px 420px at 100% -10%, rgba(47, 107, 255, 0.12) 0%, transparent 55%),
+      var(--bg);
+    color: var(--ink);
+    min-height: 100%;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+  }
+
+  /* ---------- View: consent ---------- */
+  #view-consent {
+    min-height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px max(16px, env(safe-area-inset-left, 0px));
+    padding-top: calc(24px + env(safe-area-inset-top, 0px));
+    padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  }
+  .sheet {
+    width: 100%; max-width: 400px;
+    background: var(--sheet); border-radius: var(--radius);
+    box-shadow: var(--shadow); padding: 26px 22px 22px;
+  }
+  .head { text-align: center; margin-bottom: 18px; }
+  .head h1 { font-size: 22px; font-weight: 800; letter-spacing: -0.4px; }
+  .head p { font-size: 13px; color: var(--muted); margin-top: 3px; }
+  .intro { font-size: 13px; color: var(--muted); margin-bottom: 18px; }
+  .intro b { color: var(--ink); font-weight: 700; }
+  .section-label { font-size: 14px; font-weight: 800; margin-bottom: 10px; }
+
+  .opt { display: flex; gap: 11px; align-items: flex-start; padding: 9px 0; }
+  .opt input {
+    appearance: none; -webkit-appearance: none;
+    width: 20px; height: 20px; flex-shrink: 0; margin-top: 1px;
+    border: 1.5px solid #c3c8d4; border-radius: 6px; background: var(--sheet);
+    cursor: pointer; position: relative; transition: background 0.15s, border-color 0.15s;
+  }
+  .opt input:checked { background: var(--blue); border-color: var(--blue); }
+  .opt input:checked::after {
+    content: ""; position: absolute; left: 6px; top: 2px;
+    width: 5px; height: 10px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg);
+  }
+  .opt input:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+  .opt label { font-size: 12.5px; color: var(--muted); cursor: pointer; }
+  .opt label b { color: var(--ink); font-weight: 700; }
+  .opt a, .linklike { color: var(--blue); font-weight: 600; text-decoration: none; cursor: pointer; background: none; border: none; font: inherit; padding: 0; }
+  .divider { height: 1px; background: var(--line); margin: 6px 0 16px; }
+
+  .actions { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+  .btn {
+    font: inherit; font-weight: 700; font-size: 14px; cursor: pointer;
+    border-radius: 13px; padding: 14px; border: none; width: 100%;
+    transition: transform 0.1s ease, opacity 0.15s ease;
+  }
+  .btn:active { transform: scale(0.99); }
+  .btn:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+  .btn.read { background: #eceef4; color: var(--ink); }
+  .btn.reject { background: var(--dark); color: #fff; }
+  .btn.accept-all { background: var(--dark); color: #fff; }
+  .btn.accept-sel { background: linear-gradient(135deg, var(--blue), var(--blue-2)); color: #fff; box-shadow: 0 10px 22px rgba(47, 107, 255, 0.35); }
+  :root[data-theme="dark"] .btn.read { background: #242734; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .btn.read { background: #242734; } }
+
+  /* ---------- View: policy ---------- */
+  #view-policy { display: none; }
+  .policy-bar {
+    position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10;
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    backdrop-filter: blur(10px);
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  .back {
+    display: inline-flex; align-items: center; gap: 7px;
+    font: inherit; font-weight: 700; font-size: 14px; cursor: pointer;
+    background: var(--surface); color: var(--ink);
+    border: 1px solid var(--line); border-radius: 12px; padding: 9px 14px;
+    box-shadow: var(--shadow-sm);
+  }
+  .back svg { width: 16px; height: 16px; }
+  .policy-bar h2 { font-size: 16px; font-weight: 800; letter-spacing: -0.3px; }
+
+  .policy {
+    max-width: 680px; margin: 0 auto;
+    padding: 8px 0 72px;
+    padding-left: max(18px, env(safe-area-inset-left, 0px));
+    padding-right: max(18px, env(safe-area-inset-right, 0px));
+  }
+  .policy h1 { font-size: 30px; font-weight: 800; letter-spacing: -0.6px; margin: 14px 0 6px; text-wrap: balance; }
+  .policy .updated { font-size: 12.5px; color: var(--muted); margin-bottom: 22px; }
+  .policy h3 { font-size: 17px; font-weight: 800; letter-spacing: -0.2px; margin: 26px 0 8px; }
+  .policy p { font-size: 14.5px; color: var(--ink); margin-bottom: 10px; }
+  .policy p.sub { color: var(--muted); }
+  .policy ul { margin: 0 0 10px; padding-left: 20px; }
+  .policy li { font-size: 14.5px; color: var(--ink); margin-bottom: 6px; }
+  .policy a { color: var(--blue); font-weight: 600; text-decoration: none; }
+
+  .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 14px; margin: 10px 0 6px; }
+  table { border-collapse: collapse; width: 100%; min-width: 440px; font-size: 13px; }
+  thead th {
+    text-align: left; font-weight: 800; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.4px; font-size: 11px;
+    padding: 11px 14px; background: color-mix(in srgb, var(--surface) 70%, var(--bg));
+    border-bottom: 1px solid var(--line);
+  }
+  tbody td { padding: 11px 14px; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--ink); }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody td:first-child { font-weight: 700; white-space: nowrap; }
+
+  .pill { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; }
+  .pill.ess { color: #0a7d4b; background: rgba(18,183,106,.14); }
+  .pill.pref { color: #2f6bff; background: rgba(47,107,255,.14); }
+  .pill.ana { color: #b4690e; background: rgba(230,145,30,.16); }
+  .pill.mkt { color: #c23; background: rgba(255,45,111,.14); }
+
+  .toast {
+    position: fixed; left: 50%; bottom: calc(22px + env(safe-area-inset-bottom, 0px));
+    transform: translate(-50%, 12px);
+    background: var(--ink); color: var(--bg);
+    font-size: 13px; font-weight: 700; padding: 11px 18px; border-radius: 999px;
+    box-shadow: var(--shadow); opacity: 0; pointer-events: none;
+    transition: opacity 0.2s, transform 0.2s; z-index: 50;
+  }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<!-- ============ CONSENT VIEW ============ -->
+<section id="view-consent">
+  <div class="sheet" role="dialog" aria-labelledby="ttl" aria-modal="true">
+    <div class="head">
+      <h1 id="ttl">Privacy Settings</h1>
+      <p>The app uses cookies</p>
+    </div>
+
+    <p class="intro">Some are used for statistical purposes and others are set up for third-party services. By clicking <b>Accept all</b> you accept the use of cookies.</p>
+
+    <div class="section-label">About cookies</div>
+
+    <div class="opt">
+      <input type="checkbox" id="terms" checked>
+      <label for="terms">I agree to the <button type="button" class="linklike" id="toTermsPolicy">Terms of Service</button>.</label>
+    </div>
+
+    <div class="opt">
+      <input type="checkbox" id="data">
+      <label for="data">I consent to the <b>use of my personal data</b>. This allows us to collect data about how you use this app, by means of technologies including location, device ID and IP address. We do this to create statistics, personalise the experience, and our marketing toward you. You can withdraw your consent at any time by going to our <button type="button" class="linklike" id="toPrivacyPolicy">Privacy Policy</button>.</label>
+    </div>
+
+    <div class="opt">
+      <input type="checkbox" id="news">
+      <label for="news">I agree to receive newsletters and product updates.</label>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="actions">
+      <button class="btn read" id="readMore">Read more</button>
+      <button class="btn reject" id="rejectAll">Reject all</button>
+      <button class="btn accept-all" id="acceptAll">Accept all</button>
+      <button class="btn accept-sel" id="acceptSel">Accept Selected</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ POLICY VIEW ============ -->
+<section id="view-policy">
+  <div class="policy-bar">
+    <button class="back" id="backBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      Back
+    </button>
+    <h2>Cookie Policy</h2>
+  </div>
+
+  <article class="policy">
+    <h1>Cookie Policy</h1>
+    <p class="updated">Last updated: November 2026</p>
+
+    <p>This Cookie Policy explains what cookies are, how this app uses them, the types we use, and how you can manage your choices. It should be read alongside our Privacy Policy and Terms of Service.</p>
+
+    <h3>1. Scope of this policy</h3>
+    <p class="sub">This Cookie Policy applies to this application and any pages, features and services that link to it. It explains how we use cookies and similar technologies, and should be read together with our Privacy Policy and Terms of Service.</p>
+
+    <h3>2. What are cookies?</h3>
+    <p class="sub">Cookies are small text files placed on your device when you use the app. They let the app remember your actions and preferences (such as sign-in and settings) over time, so you don't have to re-enter them each visit.</p>
+
+    <h3>3. Similar technologies we use</h3>
+    <p class="sub">Alongside cookies we may use local storage, session storage, pixels, software development kits (SDKs) and device identifiers. Where this policy says "cookies", it also covers these similar technologies.</p>
+
+    <h3>4. Why we use cookies</h3>
+    <ul>
+      <li>To keep you signed in and keep the app secure.</li>
+      <li>To remember your preferences, like theme and selected views.</li>
+      <li>To understand how the app is used, so we can improve it.</li>
+      <li>To measure and, where you consent, personalise marketing.</li>
+    </ul>
+
+    <h3>5. Legal basis and your consent</h3>
+    <p class="sub">We rely on your consent for preference, analytics and marketing cookies, which you give through the Privacy Settings screen. Essential cookies are used on the basis of our legitimate interest in providing a secure, working service. You can withdraw consent at any time.</p>
+
+    <h3>6. Categories of cookies we use</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Cookie</th><th>Purpose</th><th>Category</th><th>Duration</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>session_id</td><td>Keeps you signed in and secures your session</td><td><span class="pill ess">Essential</span></td><td>Session</td></tr>
+          <tr><td>csrf_token</td><td>Protects forms against cross-site request forgery</td><td><span class="pill ess">Essential</span></td><td>Session</td></tr>
+          <tr><td>auth_token</td><td>Remembers your authenticated login between visits</td><td><span class="pill ess">Essential</span></td><td>30 days</td></tr>
+          <tr><td>__cf_bm</td><td>Bot management and abuse protection (Cloudflare)</td><td><span class="pill ess">Essential</span></td><td>30 minutes</td></tr>
+          <tr><td>lb_route</td><td>Routes your requests to the correct server</td><td><span class="pill ess">Essential</span></td><td>Session</td></tr>
+          <tr><td>cookie_consent</td><td>Stores your cookie preferences on this screen</td><td><span class="pill ess">Essential</span></td><td>12 months</td></tr>
+          <tr><td>app_prefs</td><td>Remembers layout and display settings</td><td><span class="pill pref">Preferences</span></td><td>12 months</td></tr>
+          <tr><td>theme</td><td>Remembers light or dark appearance</td><td><span class="pill pref">Preferences</span></td><td>12 months</td></tr>
+          <tr><td>lang</td><td>Remembers your selected language</td><td><span class="pill pref">Preferences</span></td><td>12 months</td></tr>
+          <tr><td>timezone</td><td>Shows dates and times in your time zone</td><td><span class="pill pref">Preferences</span></td><td>12 months</td></tr>
+          <tr><td>recent_views</td><td>Remembers recently opened items</td><td><span class="pill pref">Preferences</span></td><td>90 days</td></tr>
+          <tr><td>_ga</td><td>Google Analytics — distinguishes unique users</td><td><span class="pill ana">Analytics</span></td><td>2 years</td></tr>
+          <tr><td>_gid</td><td>Google Analytics — distinguishes users (daily)</td><td><span class="pill ana">Analytics</span></td><td>24 hours</td></tr>
+          <tr><td>_gat</td><td>Google Analytics — limits request rate</td><td><span class="pill ana">Analytics</span></td><td>1 minute</td></tr>
+          <tr><td>_hjSessionUser</td><td>Hotjar — aggregated product-usage analytics</td><td><span class="pill ana">Analytics</span></td><td>12 months</td></tr>
+          <tr><td>_fbp</td><td>Meta Pixel — ad delivery and measurement</td><td><span class="pill mkt">Marketing</span></td><td>3 months</td></tr>
+          <tr><td>_gcl_au</td><td>Google Ads — conversion linking</td><td><span class="pill mkt">Marketing</span></td><td>3 months</td></tr>
+          <tr><td>_campaign</td><td>Measures campaign and referral performance</td><td><span class="pill mkt">Marketing</span></td><td>6 months</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="sub">Essential cookies are always active because the app cannot function without them. All other categories are optional and controlled by your choices on the Privacy Settings screen.</p>
+
+    <h3>7. Essential cookies</h3>
+    <p class="sub">These are necessary for the app to load, authenticate you and protect your session. Because they are strictly necessary, they cannot be switched off and do not require consent.</p>
+
+    <h3>8. Preference cookies</h3>
+    <p class="sub">These remember choices you make — such as language, theme, time zone and layout — so the app behaves the way you expect on your next visit.</p>
+
+    <h3>9. Analytics cookies</h3>
+    <p class="sub">These help us understand which features are used and where problems occur, using aggregated, non-identifying data. They are only set if you allow analytics.</p>
+
+    <h3>10. Marketing cookies</h3>
+    <p class="sub">These measure the performance of campaigns and, where permitted, help show you relevant messages. They are off by default and only set if you allow marketing.</p>
+
+    <h3>11. Third-party cookies</h3>
+    <p class="sub">Some cookies are set by trusted service providers acting on our behalf (for example analytics, security and payment providers). They may process limited data such as a device identifier or IP address to deliver their service, and are bound by contract to use it only for that purpose.</p>
+
+    <h3>12. How long cookies last</h3>
+    <p class="sub">Session cookies are deleted when you close the app. Persistent cookies remain for the duration shown in the table above, unless you clear them sooner. We review retention periods regularly to keep them no longer than necessary.</p>
+
+    <h3>13. Managing and disabling cookies</h3>
+    <p class="sub">You can change your choices at any time from the Privacy Settings screen. You can also block or delete cookies through your browser or device settings. Disabling essential cookies may stop parts of the app from working.</p>
+
+    <h3>14. Do Not Track and browser signals</h3>
+    <p class="sub">Some browsers send a "Do Not Track" or Global Privacy Control signal. Where required by law, we treat a recognised opt-out signal as a request to disable non-essential cookies for that browser.</p>
+
+    <h3>15. International data transfers</h3>
+    <p class="sub">Some providers may process data in countries outside your own. Where that happens, we use appropriate safeguards — such as standard contractual clauses — to protect your data in line with applicable law.</p>
+
+    <h3>16. Data security</h3>
+    <p class="sub">We use technical and organisational measures to protect the information cookies collect, including encryption in transit and restricted access. No method of transmission is completely secure, but we work to protect your data.</p>
+
+    <h3>17. Children’s privacy</h3>
+    <p class="sub">The app is not directed to children under the age required by local law, and we do not knowingly use cookies to collect data from them. If you believe a child has provided data, please contact us so we can remove it.</p>
+
+    <h3>18. Rewards for sharing data (optional)</h3>
+    <p class="sub">Sharing analytics and marketing data is entirely optional. If you choose to opt in, you can earn a small reward for taking part. For example, you earn <b>$1,000 for each day you are active with data sharing turned on</b>. Rewards are paid as in-app credit (or to your linked payment account) once your balance reaches $13,000, usually within the first week of the following month.</p>
+    <p class="sub">You can turn data sharing off at any time from the Privacy Settings screen. Rewards stop accruing when you do, and turning it off never affects your access to the app. Participation is voluntary, is not required to use the service, and we do not pay for essential cookies.</p>
+
+    <h3>19. Your rights, changes and contact</h3>
+    <p class="sub">Depending on where you live, you may have the right to access, correct or delete your data, to object to processing, and to withdraw consent. We may update this policy to reflect changes in technology, law or how the app works; for material changes we will ask for your consent again through the Privacy Settings screen.</p>
+    <p class="sub">Questions, or want to exercise your rights? Reach us at <a href="https://horizononline.com">horizononline.com</a>.</p>
+  </article>
+</section>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+  const toast = $("toast");
+  let t;
+  function show(msg) {
+    toast.textContent = msg;
+    toast.classList.add("show");
+    clearTimeout(t);
+    t = setTimeout(() => toast.classList.remove("show"), 2000);
+  }
+
+  // ---- Simple two-view routing via the hash ----
+  function render() {
+    const policy = location.hash === "#policy";
+    $("view-policy").style.display = policy ? "block" : "none";
+    $("view-consent").style.display = policy ? "none" : "flex";
+    if (policy) window.scrollTo(0, 0);
+  }
+  window.addEventListener("hashchange", render);
+  render();
+
+  const goPolicy = () => { location.hash = "policy"; };
+  $("readMore").addEventListener("click", goPolicy);
+  $("toTermsPolicy").addEventListener("click", goPolicy);
+  $("toPrivacyPolicy").addEventListener("click", goPolicy);
+  $("backBtn").addEventListener("click", () => { location.hash = "consent"; });
+
+  // ---- Consent choices (per-viewer convenience; guarded so it never throws) ----
+  const KEY = "privacy-consent-v1";
+  try {
+    const s = JSON.parse(localStorage.getItem(KEY) || "null");
+    if (s) { $("terms").checked = !!s.terms; $("data").checked = !!s.data; $("news").checked = !!s.news; }
+  } catch (e) {}
+
+  function save(state, label) {
+    try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {}
+    show(label);
+  }
+
+  $("acceptAll").addEventListener("click", () => {
+    $("terms").checked = $("data").checked = $("news").checked = true;
+    save({ terms: true, data: true, news: true }, "All cookies accepted");
+  });
+  $("rejectAll").addEventListener("click", () => {
+    $("data").checked = $("news").checked = false;
+    $("terms").checked = true;
+    save({ terms: true, data: false, news: false }, "Non-essential cookies rejected");
+  });
+  $("acceptSel").addEventListener("click", () => {
+    if (!$("terms").checked) { show("Please agree to the Terms of Service"); return; }
+    save({ terms: $("terms").checked, data: $("data").checked, news: $("news").checked }, "Your choices were saved");
+  });
+</script>
+</body></html>
